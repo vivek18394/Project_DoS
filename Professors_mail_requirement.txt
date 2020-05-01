@@ -1,0 +1,98 @@
+I see that many of you are trying to apply the concept of "snapshots"
+to a variety of problems that match your interest. A key point however
+is about a mathematical model of the distributed system where one
+apples the "snapshot" view. The model basically is a codification of the
+"cause-and-effect" relations between events that are deeply buried
+in the data-sets collected from the system to describe its behavior.
+
+If a mathematical model is elusive to find, it will be hard to come
+up with snapshot views. In a way, snapshots are applicable only
+for "supervised learning" processes.
+
+Let me give a simple example of a flock of three birds flying: x,y,z
+--- but the camera can take only two birds at a time. So, you need
+to take two local snapshots: say, birds x and y at time t and bird z
+at a later time t' --- where t'=(t+d). Here, d is the time needed to
+ready the camera between successive clicks. So, we have a local
+snapshot: L1([x,y],t,[P(x,t),P(y,t)]) --- where P(x/y,t) denotes the
+geographic position of x/y at time t. The second local snapshot will
+then be L2([z],t',[P(z,t')]) --- because the bird z has already flown
+some distance during the time-interval d. Now, our goal is to get a
+global snapshot:
+              G([x,y,z],t,[P(x,t),P(y,t),P(z,t)]) = PHI(L1(..), L2(..))
+where PHI is a data-fusion function. Here, the G(..) is made to
+look as if an instantaneous snapshot of all the three birds x,y,z
+was taken at time t --- which is indeed a panoramic view of the
+entire flock. Now the question is how to compute G(..) from the
+actual local observations L1(..) and L2(..) taken at different times ??
+
+Here is where we need a mathematical model of the bird flights.
+The model can be based on the simple physical laws of motion:
+distance=d*v, where "v" is the linear velocity of bird and d=(t'-t).
+So, we have: P(z,t)=P(z,t')-[v*d] --- assuming that the bird z does not
+change direction mid-point in the interval d. The fusion operator
+PHI will encompass the above model. In a functional form, PHI
+may be denoted as follows:
+     PHI ==>  EQUALS(P(z,t),MINUS(P(z,t'),MULTIPLY(v,d))].
+The MINUS and MULTIPLY operations are applied to the arguments
+and the result is instantiated to P(z,t).
+
+Here, the cause-and-effect relation is: P(z,t) HAPPENS-BEFORE P(z,t')
+--- i.e., if bird z was spotted at time t' in a certain geographic location,
+z should have been spotted in a previous location at an earlier time t,
+as governed by the physical laws of motion. In other words, the event
+called "bird z at location P(z,t)" causes the effect of another event called
+"bird z at location P(z,t')" --- i.e., the second event could not have occurred
+without the occurrence of first event.
+
+Now, the mathematical models underlying a distributed snapshot-taking
+process should be represented in a closed-form. If it is also a one-to-one
+mapping, we can mine an exact snapshot in a deterministic form. If it is
+a many-to-one mapping, the mined global snapshot may be ambiguous.
+We will then need machine-learning and inference tools to zero in on a
+close-to-real global snapshot.
+
+Also, note that two events happening at different times does not really
+imply that they are causally related. Consider, for example, the event
+occurrences : "rain(x,t)" and "umbrella(x,t',z)", reported by two different
+sensors, indicating respectively a rainfall in location x at time t and an
+individual z at location x holding umbrella at time t' --- where t'=(t+d).
+Here, the causal relation is: rain(x,t)  HAPPENS-BEFORE umbrella(x,t',z).
+Here, the mathematical model to causally connect the events is given
+by the logical relations:
+     FORALL  h  IN HUMANS
+              rain(x,t)  AND  umbrella(x,t',h) ==> NEG(drench(h,x,t'));
+              drench(h,_,_) ==> UNCOMFORTABLE(h);
+              COMFORT(h) <==> NEG(DISCOMFORT(h));
+where "drench(h,x,t')" denotes that an individual h present in the
+location x gets drenched at time t'. Setting COMFORT(h)=true then
+involves an execution of the above model that results in h using
+an umbrella (assuming that h has one on hand).
+
+Now, suppose there is a third event reported by another sensor:
+drive(x,t',y) to indicate that an individual y is seen to be driving a car
+in location x at time t'. Now, the "drive(x,t',y)" event has nothing to
+do with the "rain(.)" event --- though it too occurs at a later time.
+These are concurrent events.
+
+Now, a mining algorithm that looks at the various sensor reports
+ought to determine that the "drive(.)" event is causally unrelated
+to the "rain(.)" event. This is indeed the case, because there is no
+computational model in the monitoring system to connect these
+two events.
+
+As you can see, having a mathematical model to relate the event
+occurrences in various part of a distributed system allows one to
+take a good snapshot. This can in turn be part of a "supervised
+learning" mechanism.
+
+If there is no model of the problem being studied, we cannot
+take causally consistent snapshots. We may take some blind
+snapshots based on physical time orderings, but many of the
+events may not be causally connected !! Such problems fall
+under "unsupervised learning" classes where a computational
+model needs to be discovered at the outset. Such problems
+are outside the scope of our "distributed systems" course.
+
+Please consider the above points when venturing into various
+applications of the snapshot-taking project.
