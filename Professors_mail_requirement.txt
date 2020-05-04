@@ -1,3 +1,5 @@
+April 29, 2020
+
 I see that many of you are trying to apply the concept of "snapshots"
 to a variety of problems that match your interest. A key point however
 is about a mathematical model of the distributed system where one
@@ -96,3 +98,225 @@ are outside the scope of our "distributed systems" course.
 
 Please consider the above points when venturing into various
 applications of the snapshot-taking project.
+
+============================================================================================================
+
+April 30, 2020
+
+The project submission deadline will be May 27th (Wed). It should
+be 6-8 pages long, outlining the scientific elements of the project.
+The grade submission deadline is May 28th, so I need to have the
+completed project report latest by May 27th night.
+
+If your project relates to global snapshot mechanisms, you have to
+show the mathematical model that guides the snapshot-taking process.
+For e.g., how the data-sets are labelled, how do you causally connect
+the labelled data points, etc should be shown. In a way, it is an
+algorithmic proof that the snapshot is indeed causally consistent.
+You can use synthetic data-sets (but validated ones) --- because
+the scientific goal is not in coming up with the data-sets itself but is
+in a causal connection of the data points. There is no need to come
+up with an actual supervisory learning algorithm itself. It is just that
+taking a causally consistent snapshot is a precondition to trigger a
+learning process --- but how one would act upon the snapshot info
+is itself outside the scope of course. In other words, consistent
+snapshots only provide actionable information --- but an algorithmic
+process to act on this info is itself another subject. Thus, snapshot-taking
+is more of a data cleaning mechanism. Ours is  not a machine-learning
+per se. You can however give some guidelines in the project report as to
+how one would construct a learning algorithm on top of the snapshots.
+
+
+If the project is about spanning tree construction or logical ring formation,
+you need to show how the algorithmic elements were simulated --- like
+the data structures employed, run-time traces, performance results, and
+some analysis. In the tree construction algorithm, two performance indices
+are important: TTR and MSG. TTR is the time-to-reconfigure a tree --- say,
+when an on-tree node fails. MSG is the network-wide message overhead
+incurred for the reconfiguration. Since many of the sub-tree formations
+and changes occur in parallel, TTR will be a measure of the parallelism in
+the search process. Whereas, MSG will indicate the number of messages
+exchanged between nodes in the entire network as part of reconfiguration
+algorithm execution. TTR will often depend on the topology diameter, i.e,
+the extent of parallel searches happening in different regions of the network
+to heal around a failed node. MSG will depend on the node-degree, i.e.,
+how dense or sparse the topology is. You need to basically count the number
+of messages generated during an algorithm run. Here, each node-to-node
+message-passing constitutes 1 unit of message exchange.
+
+A similar analysis of TTR and MSG will be needed if you are doing the
+ring reconfiguration project.
+
+I suppose that for the spanning tree or ring algorithm simulation, you
+will be using the CORE simulator. It has a good visual interface --- and
+the internal data structures can be easily managed to incorporate
+the algorithmic elements. You can also use other simulators like OPNET
+--- if you wish. Or, you can also implement the algorithms on a Linux
+platform which will be an actual implementation (like creating UNIX-TCP
+sockets, generating topologies, etc).
+
+An actual implementation on Linux gives a deeper insight into a
+development of distributed systems software. It also lends more credibility
+for the results and studies when compared to a discrete-event simulation
+approach (like the CORE and OPNET). You can also use NS-2/NS-3
+emulators.
+
+===================================================================================================================
+
+May 1, 2020
+
+After some re-thinking, I thought of opening up the project on "replicated
+server system" as well (in a simplified form) -- which we had earlier discussed
+in the class. It can give you more flexibility in choosing a project to match
+your interests. I recall that some of you expressed an interest in this project.
+
+Note, the project on replicated server system is focused more on the
+"systems engineering" side of networks (unlike the "data science"focus
+in other projects). One can do a simple version of the replica system as
+course project --- which can be finished  in 3 weeks.
+
+The replicated server system software runs on Linux machines (connected
+by Ethernet LAN) in the City College lab --- 10 machines to host the replica
+servers and 1 machine to host the client. One should have a Linux account in
+the CCNY server to work on this project. So, those of you who are interested
+in doing this project but are not part of CCNY need to contact the CCNY-CSc
+dept. system administrator, Nikita Jaikaran (Nick), to have an account created.
+If you are contacting Nick, please CC me on your email. Nick's email address
+is: nikita@cs.ccny.cuny.edu
+
+As for technical elements, you need to run the replica voting system under
+different fault scenarios and collect the [L(bar),MSG] results. As you may
+remember from lectures, L(bar) is the number of voting iterations to effect
+the successful delivery of result for a client query (i.e., the number of
+delivery attempts made by various servers). MSG is the system-wide message
+overhead incurred therein. The system-internal parameters [fm,N,K,r'] and
+the external environment parameter [fa,r] have a substantial impact on
+the [L(bar),MSG] indices. Here, N is the # of server replicas, and K is the
+size of server pool size. For e.g., N=6 and K=10 means that there 6 servers
+deployed from a pool of 10 ready-to-deploy servers. Note that 3 <= N <= K.
+Here, "fm" is the assumed # of server failures, while "fa" is the actual #
+of server failures --- where 1 <= fm < (N/2) and 0 <= fa <= K. To simplify
+the project, you can set the fault probability parameters as:  r,r'=1.0.
+
+Note that the parameter "fm" depicts an assumption made by the designer
+of replicated server system about the fault severity anticipated to be faced
+at run-time. Whereas, "fa" is the actual fault severity emanating from the
+system's unknown external (hostile) environment. So, "fm" is under the
+control of system designer; whereas, "fa" is external to the designer's
+knowledge. The system behavior is correct iff: fa <= fm. For fa > fm, the
+system may behave incorrectly, i.e., deliver a wrong result for the client
+query in an undetectable way.
+
+As for project goal, you need to run the replicated server software system
+and collect the [L(bar),MSG] results for various combinations of the algorithm
+parameters [(N,fm,K),fa]. For instance, an increase of N reduces L(bar) but
+increases MSG. Likewise, an increase of fa increases both L(bar) and MSG.
+Your project goal is to come up with such a "cause-and-effect" analysis with
+the aid of "snapshots" taken across the entire replica server system. There
+is a mathematical model of the replicated server system, which can be used
+to validate the experimentally observed [L(bar),MSG] results. 
+
+Since the server system is a running version, you simply supply the "fm"
+and "fa" parameters as inputs for each run and collect the [L(bar),MSG]
+as output results. Each run may take about 9-12 mts to finish --- depending
+on the parameter combination [N,fm,fa]. The system of 10 servers actually
+goes through the algorithmic process of generating query results, multicast
+exchange of the results among servers, and carrying out voting actions on
+these results. At the end of a run, the system prints out various statistics.
+You may have a repeat a system run multiple times, to increase the statistical
+accuracy of results.
+
+I have enclosed herewith three documents:
+    1. A half-page instruction on how to run the servers remotely on
+       CCNY lab's Linux platform;
+    2. Zip of the latest source code files of replica server system;
+    3. Our published paper on the replica server system.
+
+One more point. The IP addresses of servers assigned earlier (2 yrs ago)
+by the system administrator have been coded into the software. So, please
+check with Nick if any of the IP addresses have changed recently. If so, you
+will have to put the new addresses in the code and recompile the software.
+
+Following up on my previous email, enclosed are the PPT slides
+that give a nut-shell description of the scientific elements of the
+project. The main element is the "snapshot" views of the system
+behavior: i.e., capturing "cause-and-effect" relations between the
+system-level control actions and the changes in system performance
+behavior changes in the snapshots.
+
+I can email you the mathematical models of replica server system
+to the students who take up this project. I can also supply you the
+MATLAB/EXCEL code for parameter estimation using the models.
+Please let me know.
+
+Note that the "environment estimator" shown in the slides does not
+exist in the software yet (it is a good candidate as future research
+problem though). In a way, by supplying the "fa" as input parameter
+for various runs, you don the role of "external environment" (i.e.,
+the bad guy). When adjusting the [N,fm,K] in response to a change in
+"fa", you then don the role of "system designer" (i.e., the good guy).
+Since the good and bad guys do not know each other, each one can
+only make an intelligent guess about what the other one is up to.
+They cannot make an exact guess though --- the quality of their guess
+is  dependent on the system model they employ and the correctness
+of snapshots they take across the entire system.
+
+With intrinsic errors and inaccuracies in a system modeling exercise,
+an autonomic management of the replication parameters [N,fm,K]
+and [fa] is basically a "cat-and-mouse game".  It is a like a policeman
+trying to guess what a criminal might be doing, and the criminal
+trying to figure out where the policeman might be !!  Neither of
+them is 100% accurate (i.e., the entire system is highly probabilistic).
+
+As a side note, the problem of server replication management can
+be a good research topic for the use of advanced machine-learning
+concepts and tools. If some one wants to take up this research later
+(say, as an "independent study" course in F'20), it will be a good topic.
+Such an extended work is entirely optional though --- and is outside
+the scope of our present course GC-72020.
+
+For the purpose of GC-72020 course project, collecting the results
+from replica server system runs and analyzing the results from
+a "snapshot" perspective is sufficient. It takes about 3 weeks
+of programming/analysis work and then writing a 5-6 page report
+(which is due by May 27th).
+
+===================================================================================================================
+
+May 2, 2020
+
+There is one another scientific element in the "replica server system"
+project that you may want to study. It is a biology-inspired functionality
+infused in the replica voting algorithm at design stage. You can see this
+as a brief explanation in the paper I had sent yesterday (footnote #5, pg.9).
+
+The basic idea is that the server faults are like a "biological virus" attacking
+a human body, and the voting algorithm mechanisms are like "biological
+antibodies" generated in the body as a natural defense against the virus.
+If the antibodies overwhelm the virus, the body gets cured --- i.e., the
+data service continues to function as if no failure ever occurred. If the
+virus overwhelms the antibodies, the body suffers the disease and
+cannot function correctly. The latter corresponds to the data service
+exhibiting two types of failures as visible to the clients:
+
+     1. Service integrity failures (i.e., the delivery of a corrupted result to the
+         end-user without being able to detect it);
+     2. Reduced availability of service (i.e., more downtime due to the system's
+         inability to decide whether to deliver a result or otherwise to end-user).
+
+#1 is a false negative whereas #2 is a (sort of) false positive. The graphs
+in figure 4 on pg. 10 capture this bio-inspired phenomenon in the server
+replication algorithm.
+
+The analogical parameters are: [N,fm] correspond to the degree of natural
+defense built into the human body. The parameter "fa" corresponds to the
+amount of exposure to the virus. The parameter "r" may correspond to the
+degree of virulence of the virus. A value of "r" close to 0 means that the virus
+is almost harmless, whereas a high value of "r" means the virus is very harmful.
+
+If you take up "replicated server system" as a course project, you can try
+to analyze the experimental results of Linux-based  system implementation
+from the above biological perspective. You can include this analysis in the
+project report (which will be due on May 27th).
+
+
