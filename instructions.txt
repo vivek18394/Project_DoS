@@ -1,0 +1,21 @@
+some instructions
+
+*) to move a node:
+	add nodes in canvas
+	go to host machine terminal
+	type "coresendmsg node number=<node_number> xpos=<xpos> ypos=<ypos>"
+
+*) add a new node(through script):
+	type "coresendmsg node flags=add number=<total_elements_in_canvas + 1> type=0 name=<ni> xpos=<xpos> ypos=<ypos>"
+
+*)add a file in node(through host script):
+	type "coresendmsg file flags=add node=<node_number> name=<test.log> data='Hello' " in host machine
+	open node terminal and type ls
+
+*)Bridge to connect to your host machine
+	add 6 mdr routers
+	add a wlan
+	go to session click options
+	copy the control network ip address
+	connect wlan to all routers
+	ping to the copied ip
